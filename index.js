@@ -276,13 +276,13 @@ const calculateCartTotals = () => {
     }
     
     const total = subtotal + delivery + shipping - discount;
-    
-    cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
-    deliveryCharge.textContent = `$${delivery.toFixed(2)}`;
-    shippingCost.textContent = `$${shipping.toFixed(2)}`;
-    discountAmount.textContent = `-$${discount.toFixed(2)}`;
-    cartTotal.textContent = `$${total.toFixed(2)}`;
-    
+
+    cartSubtotal.textContent = `BDT ${subtotal.toFixed(2)}`;
+    deliveryCharge.textContent = `BDT ${delivery.toFixed(2)}`;
+    shippingCost.textContent = `BDT ${shipping.toFixed(2)}`;
+    discountAmount.textContent = `BDT -${discount.toFixed(2)}`;
+    cartTotal.textContent = `BDT ${total.toFixed(2)}`;
+
     // Check if user has sufficient balance
     if (total > userBalance) {
         checkoutBtn.disabled = true;
