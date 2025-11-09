@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartShop - Online Product Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        .active-link {
+            color: #3b82f6;
+            font-weight: bold;
+        }
+        .slide {
+            display: none;
+        }
+        .slide.active {
+            display: block;
+        }
+        .cart-item {
+            transition: all 0.3s ease;
+        }
+        .review-slide {
+            display: none;
+        }
+        .review-slide.active {
+            display: block;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navbar Section -->
+   <nav id="navbar" class="bg-green-100 shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-green-600">🛒 SmartShop</h1>
+                </div>
+                
+                <!-- Desktop Navigation Links -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="nav-link text-gray-700 hover:text-green-600 transition duration-300">Home</a>
+                    <a href="#products" class="nav-link text-gray-700 hover:text-green-600 transition duration-300">Products</a>
+                    <a href="#reviews" class="nav-link text-gray-700 hover:text-green-600 transition duration-300">Reviews</a>
+                    <a href="#contact" class="nav-link text-gray-700 hover:text-green-600 transition duration-300">Contact</a>
+                </div>
+                
+                <!-- Right Side Items -->
+                <div class="flex items-center space-x-4">
+                    <!-- Shopping Cart -->
+                    <div class="relative">
+                        <button id="cart-btn" class="text-gray-700 hover:text-green-600 transition duration-300">
+                            <i class="fa-solid fa-shopping-cart text-xl"></i>
+                            <span id="cart-count" class="absolute -top-2 -right-2 bg-green-600 text-black rounded-full w-5 h-5 flex items-center justify-center text-xs">0</span>
+                        </button>
+                    </div>
+                    
+                    <!-- User Balance -->
+                    <div class="flex items-center space-x-2">
+                        <i class="fa-solid fa-wallet text-green-500"></i>
+                        <span id="user-balance" class="font-semibold">1000</span>
+                        <span>BDT</span>
+                    </div>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button id="menu-toggle" class="md:hidden text-gray-700">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Menu (Hidden by default) -->
+            <div id="mobile-menu" class="md:hidden hidden pb-4">
+                <div class="flex flex-col space-y-3">
+                    <a href="#home" class="nav-link text-gray-700 hover:text-green-600 transition duration-300 active-link">Home</a>
+                    <a href="#products" class="nav-link text-gray-700 hover:text-green-600 transition duration-300">Products</a>
+                    <a href="#reviews" class="nav-link text-gray-700 hover:text-green-600 transition duration-300">Reviews</a>
+                    <a href="#contact" class="nav-link text-gray-700 hover:text-green-600 transition duration-300">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Sliding Banner -->
+    <section id="home" class="py-10 bg-gradient-to-r from-green-50 to-emerald-100">
+        <div class=" container mx-auto px-4">
+            <div class="relative overflow-hidden rounded-xl shadow-lg">
+                <div class="slide active fade-in">
+                    <img src="images/banner1.avif" 
+                         alt="Winter Sale" class="w-full h-64 md:h-96 object-cover">
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-6 text-white">
+                        <h2 class="text-2xl md:text-4xl font-bold">Winter Sale</h2>
+                        <p class="mt-2 text-lg">Up to 50% off on selected items</p>
+                    </div>
+                </div>
+                <div class="slide fade-in">
+                    <img src="images/banner2.avif"
+                     alt="New Arrivals" class="w-full h-64 md:h-96 object-cover">
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-6 text-white">
+                        <h2 class="text-2xl md:text-4xl font-bold">New Arrivals</h2>
+                        <p class="mt-2 text-lg">Check out our latest products</p>
+                    </div>
+                </div>
+                <div class="slide fade-in">
+                    <img src="images/banner3.avif" 
+                         alt="Free Shipping" class="w-full h-64 md:h-96 object-cover">
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-6 text-white">
+                        <h2 class="text-2xl md:text-4xl font-bold">Free Shipping</h2>
+                        <p class="mt-2 text-lg">On orders over 1000 BDT</p>
+                    </div>
+                </div>
+                
+                <!-- Banner Navigation -->
+                <button id="prev-btn" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-70 hover:bg-opacity-100 rounded-full w-10 h-10 flex items-center justify-center">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button id="next-btn" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-70 hover:bg-opacity-100 rounded-full w-10 h-10 flex items-center justify-center">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                
+                <!-- Banner Indicators -->
+                <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                    <span class="banner-indicator w-3 h-3 rounded-full bg-white bg-opacity-70 cursor-pointer active"></span>
+                    <span class="banner-indicator w-3 h-3 rounded-full bg-white bg-opacity-70 cursor-pointer"></span>
+                    <span class="banner-indicator w-3 h-3 rounded-full bg-white bg-opacity-70 cursor-pointer"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Section -->
+    <section id="products" class="py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-green-500 text-3xl font-bold text-center mb-2">Our Products</h2>
+            <p class="text-green-400 text-center mb-8">Discover our amazing collection of products</p>
+            
+            <!-- Search and Filter -->
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0">
+                <div class="w-full md:w-auto">
+                    <input type="text" id="search-input" placeholder="Search products..." class="w-full md:w-64 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="flex space-x-4">
+                    <select id="category-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all">All Categories</option>
+                        <option value="men's clothing">Men's Clothing</option>
+                        <option value="women's clothing">Women's Clothing</option>
+                        <option value="jewelery">Jewelery</option>
+                        <option value="electronics">Electronics</option>
+                    </select>
+                    <select id="sort-by" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="default">Sort By</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="rating">Highest Rated</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Products Grid -->
+            <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Products will be loaded here dynamically -->
+                <div class="flex justify-center items-center py-12">
+                    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shopping Cart Modal -->
+    <div id="cart-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
+            <div class="flex justify-between items-center p-6 border-b">
+                <h3 class="text-2xl font-bold">Your Shopping Cart</h3>
+                <button id="close-cart" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto max-h-96">
+                <div id="cart-items" class="space-y-4">
+                    <!-- Cart items will be displayed here -->
+                    <p id="empty-cart-message" class="text-center text-gray-500 py-8">Your cart is empty</p>
+                </div>
+            </div>
+            
+            <div class="p-6 border-t bg-gray-50">
+                <div class="space-y-3 mb-6">
+                    <div class="flex justify-between">
+                        <span>Subtotal:</span>
+                        <span id="cart-subtotal">0 BDT</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Delivery Charge:</span>
+                        <span id="delivery-charge">50 BDT</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Shipping Cost:</span>
+                        <span id="shipping-cost">30 BDT</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <input type="text" id="coupon-code" placeholder="Coupon Code" class="px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <button id="apply-coupon" class="ml-2 px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600">Apply</button>
+                        </div>
+                        <span id="discount-amount">0 BDT</span>
+                    </div>
+                    <div class="flex justify-between font-bold text-lg border-t pt-3">
+                        <span>Total:</span>
+                        <span id="cart-total">80 BDT</span>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between">
+                    <button id="clear-cart" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Clear Cart</button>
+                    <button id="checkout" class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <!-- Review Section -->
+    <section id="reviews" class="py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-2 text-green-500">Customer Reviews</h2>
+            <p class="text-center text-green-500 mb-8">See what our customers are saying about us</p>
+            
+            <div class="relative overflow-hidden rounded-lg shadow-md">
+                <div id="review-slider" class="flex transition-transform duration-500 ease-in-out">
+                    <!-- Reviews will be loaded here dynamically from API -->
+                    <div class="min-w-full p-8 flex justify-center items-center">
+                        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                    </div>
+                </div>
+                
+                <!-- Review Navigation -->
+                <button id="review-prev" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-70 text-gray-800 p-2 rounded-full hover:bg-opacity-100 transition">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <button id="review-next" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-70 text-gray-800 p-2 rounded-full hover:bg-opacity-100 transition">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-green-500 text-center mb-2">Contact Us</h2>
+            <p class="text-green-500 text-center mb-8">We'd love to hear from you</p>
+            
+            <div class="max-w-2xl mx-auto bg-gray-50 rounded-xl shadow-md p-8">
+                <form id="contact-form">
+                    <div class="mb-6">
+                        <label for="name" class="block text-gray-700 mb-2">Full Name</label>
+                        <input type="text" id="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <p id="name-error" class="text-red-500 text-sm mt-1 hidden">Please enter your name</p>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="email" class="block text-gray-700 mb-2">Email Address</label>
+                        <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <p id="email-error" class="text-red-500 text-sm mt-1 hidden">Please enter a valid email address</p>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="message" class="block text-gray-700 mb-2">Message</label>
+                        <textarea id="message" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+                        <p id="message-error" class="text-red-500 text-sm mt-1 hidden">Please enter your message</p>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition duration-300 font-semibold">
+                        Send Message
+                    </button>
+                </form>
+                
+                <div id="thank-you-message" class="hidden mt-6 p-4 bg-green-100 text-green-700 rounded-lg text-center">
+                    <i class="fas fa-check-circle text-2xl mb-2"></i>
+                    <h3 class="font-bold text-lg">Thank You!</h3>
+                    <p>Your message has been sent successfully. We'll get back to you soon.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- User Balance Section -->
+    <section class="py-8 bg-white-100">
+        <div class="container mx-auto px-4">
+            <div class="max-w-md mx-auto bg-white rounded-xl shadow-md p-6">
+                <h3 class="text-xl text-green-500 font-bold mb-4 text-center">Your Wallet</h3>
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <p class="text-gray-600">Current Balance</p>
+                        <p class="text-2xl font-bold"><span id="balance-display">1000</span> BDT</p>
+                    </div>
+                    <button id="add-money" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center">
+                        <i class="fas fa-plus mr-2"></i> Add Money
+                    </button>
+                </div>
+                <div id="balance-warning" class="hidden p-3 bg-red-100 text-red-700 rounded-lg text-center">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>
+                    <span>Insufficient balance! Please add more money to your account.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="bg-green-200 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">🛒 SmartShop</h3>
+                    <p class="text-gray-500 mb-4">Your one-stop destination for all your shopping needs. Quality products at affordable prices.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-500 hover:text-white">
+                            <i class="fa-brands fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-gray-500 hover:text-white">
+                            <i class="fa-brands fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-500 hover:text-white">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-500 hover:text-white">
+                            <i class="fa-brands fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-500 hover:text-white transition duration-300">Home</a></li>
+                        <li><a href="#products" class="text-gray-500 hover:text-white transition duration-300">Products</a></li>
+                        <li><a href="#reviews" class="text-gray-500 hover:text-white transition duration-300">Reviews</a></li>
+                        <li><a href="#contact" class="text-gray-500 hover:text-white transition duration-300">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
+                    <ul class="space-y-2 text-gray-500">
+                        <li class="flex items-center">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span>Boddharhat ElezyPark 2nd floor</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa-solid fa-phone mr-3"></i>
+                            <span>+880 16 109 75008</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa-solid fa-envelope mr-3"></i>
+                            <span>info@smartshop.com</span> 
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 SmartShop. All rights reserved.</p>
+                <button id="back-to-top" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center">
+                    <i class="fas fa-arrow-up mr-2"></i> Back to Top
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <script src="index.js"></script>
+</body>
+</html>
