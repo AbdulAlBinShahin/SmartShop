@@ -71,6 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+
 // Fetch products from FakeStore API
 const fetchProducts = () => {
     fetch('https://fakestoreapi.com/products')
