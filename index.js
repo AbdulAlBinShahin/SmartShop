@@ -400,70 +400,53 @@ const startBannerAutoSlide = () => {
 }
 
 // Fetch reviews from API
-const fetchReviews = async () => {
-    try {
-        // Using JSONPlaceholder API for reviews
-        const response = await fetch('https://jsonplaceholder.typicode.com/comments');
-        const comments = await response.json();
-        
-        // Transform comments into reviews format
-        reviews = comments.slice(0, 10).map(comment => ({
-            id: comment.id,
-            name: comment.name,
-            email: comment.email,
-            body: comment.body,
-            rating: Math.floor(Math.random() * 5) + 1, // Random rating 1-5
-            date: new Date(Date.now() - Math.floor(Math.random() * 10000000000)).toLocaleDateString()
-        }));
-        
-        displayReviews();
-    } catch (error) {
-        console.error('Error fetching reviews:', error);
-        // Fallback to local reviews if API fails
-        reviews = [
-            {
-                id: 1,
-                name: "John Doe",
-                email: "john@example.com",
-                body: "Great products and fast delivery! I'm very satisfied with my purchase.",
-                rating: 5,
-                date: "2023-05-15"
-            },
-            {
-                id: 2,
-                name: "Jane Smith",
-                email: "jane@example.com",
-                body: "The quality of the products exceeded my expectations. Will definitely shop here again!",
-                rating: 4,
-                date: "2023-06-22"
-            },
-            {
-                id: 3,
-                name: "Michael Johnson",
-                email: "michael@example.com",
-                body: "Good prices and excellent customer service. Highly recommended!",
-                rating: 5,
-                date: "2023-07-10"
-            },
-            {
-                id: 4,
-                name: "Sarah Williams",
-                email: "sarah@example.com",
-                body: "I love the variety of products available. Found exactly what I was looking for.",
-                rating: 4,
-                date: "2023-08-05"
-            },
-            {
-                id: 5,
-                name: "David Brown",
-                email: "david@example.com",
-                body: "Fast shipping and products arrived in perfect condition. Very happy with my purchase.",
-                rating: 5,
-                date: "2023-09-12"
-            }
-        ];
-        displayReviews();
-    }
+const fetchReviews = () => {
+    fetch('https://jsonplaceholder.typicode.com/comments')
+        .then((response) => response.json())
+        .then((comments) => {
+            // Transform comments into reviews format
+            reviews = comments.slice(0, 10).map(comment => ({
+                id: comment.id,
+                name: comment.name,
+                email: comment.email,
+                body: comment.body,
+                rating: Math.floor(Math.random() * 5) + 1, // Random rating 1-5
+                date: new Date(Date.now() - Math.floor(Math.random() * 10000000000)).toLocaleDateString()
+            }));
+            displayReviews();
+        })
+        .catch((error) => {
+            console.error('Error fetching reviews:', error);
+            // Fallback to local reviews if API fails
+            reviews = [
+                
+                {
+                    id: 1,
+                    name: "Shayed Hamim",
+                    email: "shayed@gmail.com",
+                    body: "Great products and fast delivery! I'm very satisfied with my purchase.",
+                    rating: 5,
+                    date: "2023-05-15"
+                },
+                {
+                    id: 2,
+                    name: "Ariyan Dey",
+                    email: "ariyan@gmail.com",
+                    body: "The quality of the products exceeded my expectations. Will definitely shop here again!",
+                    rating: 4,
+                    date: "2023-06-22"
+                },
+                {
+                    id: 3,
+                    name: "Mohammad Johan",
+                    email: "johan@gmail.com",
+                    body: "Good prices and excellent customer service. Highly recommended!",
+                    rating: 5,
+                    date: "2023-07-10"
+                }
+            ];
+            displayReviews();
+        });
 }
 
 // Display reviews in the slider
