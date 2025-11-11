@@ -8,17 +8,16 @@ let reviews = [];
 let couponApplied = false;
 let discountRate = 0;
 
-
-
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
+
     fetchProducts();
     fetchReviews();
-
+    
     setupEventListeners();
     startBannerAutoSlide();
     startReviewAutoSlide();
-      const savedBalance = localStorage.getItem('smartShopBalance');
+    const savedBalance = localStorage.getItem('smartShopBalance');
     if (savedBalance) {
         userBalance = parseInt(savedBalance);
         updateBalanceDisplay();
@@ -75,7 +74,6 @@ const displayProducts = (productsToDisplay) => {
         productsGrid.appendChild(productCard);
     });
     
-    // Add event listeners to "Add to Cart" buttons
     document.querySelectorAll('.add-to-cart').forEach(button => {
         button.addEventListener('click', function() {
             const productId = parseInt(this.getAttribute('data-id'));
@@ -106,12 +104,6 @@ const generateStarRating = (rating) => {
     return stars;
 }
 
-
-
-
-const emptyCartMessage = document.getElementById('empty-cart-message');
-const cartModal = document.getElementById('cart-modal');
-const cartItems = document.getElementById('cart-items');
 // Add product to cart
 const addToCart = (productId) => {
     const product = products.find(p => p.id === productId);
@@ -134,7 +126,8 @@ const addToCart = (productId) => {
     updateCart();
     showNotification(`${product.title} added to cart!`);
 }
-const closeCart = document.getElementById('close-cart');
+
+
 // Remove product from cart
 const removeFromCart = (productId) => {
     cart = cart.filter(item => item.id !== productId);
@@ -154,7 +147,17 @@ const updateCartQuantity = (productId, newQuantity) => {
         updateCart();
     }
 }
+const cartBtn = document.getElementById('cart-btn');
+const cartModal = document.getElementById('cart-modal');
+const closeCart = document.getElementById('close-cart');
+const cartItems = document.getElementById('cart-items');
 const cartCount = document.getElementById('cart-count');
+const cartSubtotal = document.getElementById('cart-subtotal');
+const deliveryCharge = document.getElementById('delivery-charge');
+const shippingCost = document.getElementById('shipping-cost');
+const discountAmount = document.getElementById('discount-amount');
+const cartTotal = document.getElementById('cart-total');
+// Update cart display and calculations
 const updateCart = () => {
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     cartCount.textContent = totalItems;
@@ -187,7 +190,7 @@ const updateCart = () => {
         `;
         cartItems.appendChild(cartItem);
     });
-    const cartBtn = document.getElementById('cart-btn');
+    
     // Add event listeners to cart item buttons
     document.querySelectorAll('.decrease-quantity').forEach(button => {
         button.addEventListener('click', function() {
@@ -218,13 +221,7 @@ const updateCart = () => {
     
     calculateCartTotals();
 }
-const cartSubtotal = document.getElementById('cart-subtotal');
-const deliveryCharge = document.getElementById('delivery-charge');
-const shippingCost = document.getElementById('shipping-cost');
-const discountAmount = document.getElementById('discount-amount');
-const cartTotal = document.getElementById('cart-total');
-const couponCode = document.getElementById('coupon-code');
-const applyCoupon = document.getElementById('apply-coupon');
+
 // Calculate cart totals
 const calculateCartTotals = () => {
     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -243,8 +240,6 @@ const calculateCartTotals = () => {
     shippingCost.textContent = `BDT ${shipping.toFixed(2)}`;
     discountAmount.textContent = `BDT -${discount.toFixed(2)}`;
     cartTotal.textContent = `BDT ${total.toFixed(2)}`;
-
-    // Check if user has sufficient balance
     if (total > userBalance) {
         checkoutBtn.disabled = true;
         checkoutBtn.classList.add('opacity-50', 'cursor-not-allowed');
@@ -255,7 +250,8 @@ const calculateCartTotals = () => {
         balanceWarning.classList.add('hidden');
     }
 }
-
+const couponCode = document.getElementById('coupon-code');
+const applyCoupon = document.getElementById('apply-coupon');
 // Apply coupon code
 const applyCouponCode = () => {
     const code = couponCode.value.trim();
@@ -273,6 +269,7 @@ const applyCouponCode = () => {
     }
 }
 const clearCartBtn = document.getElementById('clear-cart');
+const emptyCartMessage = document.getElementById('empty-cart-message');
 // Clear cart
 const clearCart = () => {
     cart = [];
@@ -298,37 +295,42 @@ const checkout = () => {
     
     userBalance -= total;
     updateBalanceDisplay();
+    
     localStorage.setItem('smartShopBalance', userBalance.toString());
-       cart = [];
+    
+    // Clear cart
+    cart = [];
     couponApplied = false;
     discountRate = 0;
     couponCode.value = '';
     updateCart();
-    
     cartModal.classList.add('hidden');
-    
     showNotification(`Order placed successfully! $${total.toFixed(2)} deducted from your balance.`, 'success');
 }
-const userBalanceDisplay = document.getElementById('user-balance');
-const balanceDisplay = document.getElementById('balance-display');
-const balanceWarning = document.getElementById('balance-warning');
 
+// Update user balance display
 const updateBalanceDisplay = () => {
     userBalanceDisplay.textContent = userBalance;
     balanceDisplay.textContent = userBalance;
 }
+
+const userBalanceDisplay = document.getElementById('user-balance');
+const balanceDisplay = document.getElementById('balance-display');
 const addMoneyBtn = document.getElementById('add-money');
+const balanceWarning = document.getElementById('balance-warning');
 // Add money to user balance
 const addMoney = () => {
     userBalance += 1000;
     updateBalanceDisplay();
     
+    // Save balance to localStorage
     localStorage.setItem('smartShopBalance', userBalance.toString());
     
     showNotification('1000 BDT added to your balance!', 'success');
 }
-const slides = document.querySelectorAll('.slide');
 const bannerIndicators = document.querySelectorAll('.banner-indicator');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
 // Banner slide functions
 const showSlide = (index) => {
     slides.forEach(slide => slide.classList.remove('active'));
@@ -365,7 +367,7 @@ const fetchReviews = () => {
                 name: comment.name,
                 email: comment.email,
                 body: comment.body,
-                rating: Math.floor(Math.random() * 5) + 1, 
+                rating: Math.floor(Math.random() * 5) + 1,
                 date: new Date(Date.now() - Math.floor(Math.random() * 10000000000)).toLocaleDateString()
             }));
             displayReviews();
@@ -404,7 +406,8 @@ const fetchReviews = () => {
 }
 const reviewSlider = document.getElementById('review-slider');
 const reviewIndicators = document.querySelectorAll('.review-indicator');
-
+const reviewPrev = document.getElementById('review-prev');
+const reviewNext = document.getElementById('review-next');
 // Display reviews in the slider
 const displayReviews = () => {
     if (!reviewSlider) return;
@@ -443,7 +446,6 @@ const showReview = (index) => {
     
     currentReviewIndex = index;
     reviewSlider.style.transform = `translateX(-${currentReviewIndex * 100}%)`;
-    
     if (reviewIndicators.length > 0) {
         reviewIndicators.forEach((indicator, i) => {
             if (i === currentReviewIndex) {
@@ -454,15 +456,13 @@ const showReview = (index) => {
         });
     }
 }
-const reviewPrev = document.getElementById('review-prev');
-const reviewNext = document.getElementById('review-next');
-const nextBtn = document.getElementById('next-btn');
+
 const nextReview = () => {
     let nextIndex = currentReviewIndex + 1;
     if (nextIndex >= reviews.length) nextIndex = 0;
     showReview(nextIndex);
 }
-const prevBtn = document.getElementById('prev-btn');
+
 const prevReview = () => {
     let prevIndex = currentReviewIndex - 1;
     if (prevIndex < 0) prevIndex = reviews.length - 1;
@@ -472,7 +472,6 @@ const prevReview = () => {
 const startReviewAutoSlide = () => {
     setInterval(nextReview, 6000);
 }
-
 const searchInput = document.getElementById('search-input');
 const categoryFilter = document.getElementById('category-filter');
 const sortBy = document.getElementById('sort-by');
@@ -483,20 +482,17 @@ const filterProducts = () => {
     const sortOption = sortBy.value;
     
     let filteredProducts = products;
-
     if (searchTerm) {
         filteredProducts = filteredProducts.filter(product => 
             product.title.toLowerCase().includes(searchTerm) ||
             product.description.toLowerCase().includes(searchTerm)
         );
     }
-
     if (category !== 'all') {
         filteredProducts = filteredProducts.filter(product => 
             product.category === category
         );
     }
-    
     if (sortOption === 'price-low') {
         filteredProducts.sort((a, b) => a.price - b.price);
     } else if (sortOption === 'price-high') {
@@ -518,8 +514,6 @@ const submitContactForm = (event) => {
     const message = document.getElementById('message').value;
     
     let valid = true;
-    
-    // Reset error messages
     document.getElementById('name-error').classList.add('hidden');
     document.getElementById('email-error').classList.add('hidden');
     document.getElementById('message-error').classList.add('hidden');
@@ -545,7 +539,6 @@ const submitContactForm = (event) => {
         thankYouMessage.classList.remove('hidden');
 
         contactForm.reset();
-        
         setTimeout(() => {
             thankYouMessage.classList.add('hidden');
             contactForm.classList.remove('hidden');
@@ -579,7 +572,7 @@ const showNotification = (message, type = 'success') => {
         }, 300);
     }, 3000);
 }
-const backToTopBtn = document.getElementById('back-to-top');
+
 // Scroll to top
 const scrollToTop = () => {
     window.scrollTo({
@@ -587,11 +580,13 @@ const scrollToTop = () => {
         behavior: 'smooth'
     });
 }
-const mobileMenuToggle = document.getElementById('menu-toggle');
-const mobileMenu = document.getElementById('mobile-menu');
 const navbar = document.getElementById('navbar');
 const navLinks = document.querySelectorAll('.nav-link');
+const mobileMenuToggle = document.getElementById('menu-toggle');
+const mobileMenu = document.getElementById('mobile-menu');
+const slides = document.querySelectorAll('.slide');
 const setupEventListeners = () => {
+    // Navbar active link highlighting
     navLinks.forEach(link => {
         link.addEventListener('click', function() {
             navLinks.forEach(l => l.classList.remove('active-link'));
@@ -602,29 +597,39 @@ const setupEventListeners = () => {
             }
         });
     });
-    
+    const backToTopBtn = document.getElementById('back-to-top');
+    // Mobile menu toggle
     mobileMenuToggle.addEventListener('click', function() {
         mobileMenu.classList.toggle('hidden');
     });
     
+    // Banner navigation
     prevBtn.addEventListener('click', prevSlide);
     nextBtn.addEventListener('click', nextSlide);
     
+    // Banner indicators
     bannerIndicators.forEach((indicator, index) => {
         indicator.addEventListener('click', () => showSlide(index));
     });
     
+    // Cart modal
     cartBtn.addEventListener('click', () => cartModal.classList.remove('hidden'));
     closeCart.addEventListener('click', () => cartModal.classList.add('hidden'));
     
+    // Apply coupon
     applyCoupon.addEventListener('click', applyCouponCode);
     
+    // Clear cart
     clearCartBtn.addEventListener('click', clearCart);
-
+    
+    // Checkout
     checkoutBtn.addEventListener('click', checkout);
-
+    
+    // Review navigation
     reviewPrev.addEventListener('click', prevReview);
     reviewNext.addEventListener('click', nextReview);
+    
+    // Review indicators
     if (reviewIndicators.length > 0) {
         reviewIndicators.forEach((indicator, index) => {
             indicator.addEventListener('click', () => showReview(index));
@@ -634,10 +639,18 @@ const setupEventListeners = () => {
     // Search and filter
     searchInput.addEventListener('input', filterProducts);
     categoryFilter.addEventListener('change', filterProducts);
-    sortBy.addEventListener('change', filterProducts)
+    sortBy.addEventListener('change', filterProducts);
+    
+    // Contact form
     contactForm.addEventListener('submit', submitContactForm);
+    
+    // User balance
     addMoneyBtn.addEventListener('click', addMoney);
+    
+    // Back to top
     backToTopBtn.addEventListener('click', scrollToTop);
+    
+    // Close cart modal when clicking outside
     window.addEventListener('click', function(event) {
         if (event.target === cartModal) {
             cartModal.classList.add('hidden');
