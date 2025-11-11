@@ -8,63 +8,17 @@ let reviews = [];
 let couponApplied = false;
 let discountRate = 0;
 
-// DOM elements
-const navbar = document.getElementById('navbar');
-const navLinks = document.querySelectorAll('.nav-link');
-const mobileMenuToggle = document.getElementById('menu-toggle');
-const mobileMenu = document.getElementById('mobile-menu');
-const slides = document.querySelectorAll('.slide');
-const bannerIndicators = document.querySelectorAll('.banner-indicator');
-const prevBtn = document.getElementById('prev-btn');
-const nextBtn = document.getElementById('next-btn');
-const productsGrid = document.getElementById('products-grid');
-const cartBtn = document.getElementById('cart-btn');
-const cartModal = document.getElementById('cart-modal');
-const closeCart = document.getElementById('close-cart');
-const cartItems = document.getElementById('cart-items');
-const cartCount = document.getElementById('cart-count');
-const cartSubtotal = document.getElementById('cart-subtotal');
-const deliveryCharge = document.getElementById('delivery-charge');
-const shippingCost = document.getElementById('shipping-cost');
-const discountAmount = document.getElementById('discount-amount');
-const cartTotal = document.getElementById('cart-total');
-const couponCode = document.getElementById('coupon-code');
-const applyCoupon = document.getElementById('apply-coupon');
-const clearCartBtn = document.getElementById('clear-cart');
-const checkoutBtn = document.getElementById('checkout');
-const emptyCartMessage = document.getElementById('empty-cart-message');
-const searchInput = document.getElementById('search-input');
-const categoryFilter = document.getElementById('category-filter');
-const sortBy = document.getElementById('sort-by');
-const reviewSlider = document.getElementById('review-slider');
-const reviewIndicators = document.querySelectorAll('.review-indicator');
-const reviewPrev = document.getElementById('review-prev');
-const reviewNext = document.getElementById('review-next');
-const contactForm = document.getElementById('contact-form');
-const thankYouMessage = document.getElementById('thank-you-message');
-const userBalanceDisplay = document.getElementById('user-balance');
-const balanceDisplay = document.getElementById('balance-display');
-const addMoneyBtn = document.getElementById('add-money');
-const balanceWarning = document.getElementById('balance-warning');
-const backToTopBtn = document.getElementById('back-to-top');
+
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-    // Load products from API
     fetchProducts();
     fetchReviews();
-    
-    // Set up event listeners
+
     setupEventListeners();
-    
-    // Start banner auto-slide
     startBannerAutoSlide();
-    
-    // Start review auto-slide
     startReviewAutoSlide();
-    
-    // Load user balance from localStorage if available
-    const savedBalance = localStorage.getItem('smartShopBalance');
+      const savedBalance = localStorage.getItem('smartShopBalance');
     if (savedBalance) {
         userBalance = parseInt(savedBalance);
         updateBalanceDisplay();
@@ -85,7 +39,7 @@ const fetchProducts = () => {
             productsGrid.innerHTML = '<p class="text-center text-red-500 col-span-full">Failed to load products. Please try again later.</p>';
         });
 }
-
+const productsGrid = document.getElementById('products-grid');
 // Display products in the grid
 const displayProducts = (productsToDisplay) => {
     productsGrid.innerHTML = '';
@@ -152,6 +106,12 @@ const generateStarRating = (rating) => {
     return stars;
 }
 
+
+
+
+const emptyCartMessage = document.getElementById('empty-cart-message');
+const cartModal = document.getElementById('cart-modal');
+const cartItems = document.getElementById('cart-items');
 // Add product to cart
 const addToCart = (productId) => {
     const product = products.find(p => p.id === productId);
@@ -174,7 +134,7 @@ const addToCart = (productId) => {
     updateCart();
     showNotification(`${product.title} added to cart!`);
 }
-
+const closeCart = document.getElementById('close-cart');
 // Remove product from cart
 const removeFromCart = (productId) => {
     cart = cart.filter(item => item.id !== productId);
@@ -194,14 +154,10 @@ const updateCartQuantity = (productId, newQuantity) => {
         updateCart();
     }
 }
-
-// Update cart display and calculations
+const cartCount = document.getElementById('cart-count');
 const updateCart = () => {
-    // Update cart count
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     cartCount.textContent = totalItems;
-    
-    // Update cart items display
     cartItems.innerHTML = '';
     
     if (cart.length === 0) {
@@ -231,7 +187,7 @@ const updateCart = () => {
         `;
         cartItems.appendChild(cartItem);
     });
-    
+    const cartBtn = document.getElementById('cart-btn');
     // Add event listeners to cart item buttons
     document.querySelectorAll('.decrease-quantity').forEach(button => {
         button.addEventListener('click', function() {
@@ -260,10 +216,15 @@ const updateCart = () => {
         });
     });
     
-    // Calculate cart totals
     calculateCartTotals();
 }
-
+const cartSubtotal = document.getElementById('cart-subtotal');
+const deliveryCharge = document.getElementById('delivery-charge');
+const shippingCost = document.getElementById('shipping-cost');
+const discountAmount = document.getElementById('discount-amount');
+const cartTotal = document.getElementById('cart-total');
+const couponCode = document.getElementById('coupon-code');
+const applyCoupon = document.getElementById('apply-coupon');
 // Calculate cart totals
 const calculateCartTotals = () => {
     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -311,7 +272,7 @@ const applyCouponCode = () => {
         calculateCartTotals();
     }
 }
-
+const clearCartBtn = document.getElementById('clear-cart');
 // Clear cart
 const clearCart = () => {
     cart = [];
@@ -321,7 +282,7 @@ const clearCart = () => {
     updateCart();
     showNotification('Cart cleared successfully!');
 }
-
+const checkoutBtn = document.getElementById('checkout');
 // Checkout process
 const checkout = () => {
     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -335,44 +296,39 @@ const checkout = () => {
         return;
     }
     
-    // Deduct amount from balance
     userBalance -= total;
     updateBalanceDisplay();
-    
-    // Save balance to localStorage
     localStorage.setItem('smartShopBalance', userBalance.toString());
-    
-    // Clear cart
-    cart = [];
+       cart = [];
     couponApplied = false;
     discountRate = 0;
     couponCode.value = '';
     updateCart();
     
-    // Close cart modal
     cartModal.classList.add('hidden');
     
-    // Show success message
     showNotification(`Order placed successfully! $${total.toFixed(2)} deducted from your balance.`, 'success');
 }
+const userBalanceDisplay = document.getElementById('user-balance');
+const balanceDisplay = document.getElementById('balance-display');
+const balanceWarning = document.getElementById('balance-warning');
 
-// Update user balance display
 const updateBalanceDisplay = () => {
     userBalanceDisplay.textContent = userBalance;
     balanceDisplay.textContent = userBalance;
 }
-
+const addMoneyBtn = document.getElementById('add-money');
 // Add money to user balance
 const addMoney = () => {
     userBalance += 1000;
     updateBalanceDisplay();
     
-    // Save balance to localStorage
     localStorage.setItem('smartShopBalance', userBalance.toString());
     
     showNotification('1000 BDT added to your balance!', 'success');
 }
-
+const slides = document.querySelectorAll('.slide');
+const bannerIndicators = document.querySelectorAll('.banner-indicator');
 // Banner slide functions
 const showSlide = (index) => {
     slides.forEach(slide => slide.classList.remove('active'));
@@ -404,20 +360,18 @@ const fetchReviews = () => {
     fetch('https://jsonplaceholder.typicode.com/comments')
         .then((response) => response.json())
         .then((comments) => {
-            // Transform comments into reviews format
             reviews = comments.slice(0, 10).map(comment => ({
                 id: comment.id,
                 name: comment.name,
                 email: comment.email,
                 body: comment.body,
-                rating: Math.floor(Math.random() * 5) + 1, // Random rating 1-5
+                rating: Math.floor(Math.random() * 5) + 1, 
                 date: new Date(Date.now() - Math.floor(Math.random() * 10000000000)).toLocaleDateString()
             }));
             displayReviews();
         })
         .catch((error) => {
             console.error('Error fetching reviews:', error);
-            // Fallback to local reviews if API fails
             reviews = [
                 
                 {
@@ -448,6 +402,8 @@ const fetchReviews = () => {
             displayReviews();
         });
 }
+const reviewSlider = document.getElementById('review-slider');
+const reviewIndicators = document.querySelectorAll('.review-indicator');
 
 // Display reviews in the slider
 const displayReviews = () => {
@@ -478,7 +434,6 @@ const displayReviews = () => {
         reviewSlider.appendChild(reviewElement);
     });
     
-    // Show first review
     showReview(0);
 }
 
@@ -489,7 +444,6 @@ const showReview = (index) => {
     currentReviewIndex = index;
     reviewSlider.style.transform = `translateX(-${currentReviewIndex * 100}%)`;
     
-    // Update indicators
     if (reviewIndicators.length > 0) {
         reviewIndicators.forEach((indicator, i) => {
             if (i === currentReviewIndex) {
@@ -500,13 +454,15 @@ const showReview = (index) => {
         });
     }
 }
-
+const reviewPrev = document.getElementById('review-prev');
+const reviewNext = document.getElementById('review-next');
+const nextBtn = document.getElementById('next-btn');
 const nextReview = () => {
     let nextIndex = currentReviewIndex + 1;
     if (nextIndex >= reviews.length) nextIndex = 0;
     showReview(nextIndex);
 }
-
+const prevBtn = document.getElementById('prev-btn');
 const prevReview = () => {
     let prevIndex = currentReviewIndex - 1;
     if (prevIndex < 0) prevIndex = reviews.length - 1;
@@ -517,6 +473,9 @@ const startReviewAutoSlide = () => {
     setInterval(nextReview, 6000);
 }
 
+const searchInput = document.getElementById('search-input');
+const categoryFilter = document.getElementById('category-filter');
+const sortBy = document.getElementById('sort-by');
 // Search and filter products
 const filterProducts = () => {
     const searchTerm = searchInput.value.toLowerCase();
@@ -524,23 +483,20 @@ const filterProducts = () => {
     const sortOption = sortBy.value;
     
     let filteredProducts = products;
-    
-    // Filter by search term
+
     if (searchTerm) {
         filteredProducts = filteredProducts.filter(product => 
             product.title.toLowerCase().includes(searchTerm) ||
             product.description.toLowerCase().includes(searchTerm)
         );
     }
-    
-    // Filter by category
+
     if (category !== 'all') {
         filteredProducts = filteredProducts.filter(product => 
             product.category === category
         );
     }
     
-    // Sort products
     if (sortOption === 'price-low') {
         filteredProducts.sort((a, b) => a.price - b.price);
     } else if (sortOption === 'price-high') {
@@ -551,7 +507,8 @@ const filterProducts = () => {
     
     displayProducts(filteredProducts);
 }
-
+const contactForm = document.getElementById('contact-form');
+const thankYouMessage = document.getElementById('thank-you-message');
 // Contact form submission
 const submitContactForm = (event) => {
     event.preventDefault();
@@ -567,20 +524,17 @@ const submitContactForm = (event) => {
     document.getElementById('email-error').classList.add('hidden');
     document.getElementById('message-error').classList.add('hidden');
     
-    // Validate name
     if (!name.trim()) {
         document.getElementById('name-error').classList.remove('hidden');
         valid = false;
     }
     
-    // Validate email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         document.getElementById('email-error').classList.remove('hidden');
         valid = false;
     }
     
-    // Validate message
     if (!message.trim()) {
         document.getElementById('message-error').classList.remove('hidden');
         valid = false;
@@ -589,11 +543,9 @@ const submitContactForm = (event) => {
     if (valid) {
         contactForm.classList.add('hidden');
         thankYouMessage.classList.remove('hidden');
-        
-        // Reset form
+
         contactForm.reset();
         
-        // Hide thank you message after 5 seconds and show form again
         setTimeout(() => {
             thankYouMessage.classList.add('hidden');
             contactForm.classList.remove('hidden');
@@ -603,7 +555,6 @@ const submitContactForm = (event) => {
 
 // Show notification
 const showNotification = (message, type = 'success') => {
-    // Create notification element
     const notification = document.createElement('div');
     notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 transform translate-x-full ${
         type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
@@ -617,12 +568,10 @@ const showNotification = (message, type = 'success') => {
     
     document.body.appendChild(notification);
     
-    // Animate in
     setTimeout(() => {
         notification.classList.remove('translate-x-full');
     }, 10);
     
-    // Remove after 3 seconds
     setTimeout(() => {
         notification.classList.add('translate-x-full');
         setTimeout(() => {
@@ -630,7 +579,7 @@ const showNotification = (message, type = 'success') => {
         }, 300);
     }, 3000);
 }
-
+const backToTopBtn = document.getElementById('back-to-top');
 // Scroll to top
 const scrollToTop = () => {
     window.scrollTo({
@@ -638,54 +587,44 @@ const scrollToTop = () => {
         behavior: 'smooth'
     });
 }
-
-// Set up all event listeners
+const mobileMenuToggle = document.getElementById('menu-toggle');
+const mobileMenu = document.getElementById('mobile-menu');
+const navbar = document.getElementById('navbar');
+const navLinks = document.querySelectorAll('.nav-link');
 const setupEventListeners = () => {
-    // Navbar active link highlighting
     navLinks.forEach(link => {
         link.addEventListener('click', function() {
             navLinks.forEach(l => l.classList.remove('active-link'));
             this.classList.add('active-link');
             
-            // Close mobile menu if open
             if (window.innerWidth < 768) {
                 mobileMenu.classList.add('hidden');
             }
         });
     });
     
-    // Mobile menu toggle
     mobileMenuToggle.addEventListener('click', function() {
         mobileMenu.classList.toggle('hidden');
     });
     
-    // Banner navigation
     prevBtn.addEventListener('click', prevSlide);
     nextBtn.addEventListener('click', nextSlide);
     
-    // Banner indicators
     bannerIndicators.forEach((indicator, index) => {
         indicator.addEventListener('click', () => showSlide(index));
     });
     
-    // Cart modal
     cartBtn.addEventListener('click', () => cartModal.classList.remove('hidden'));
     closeCart.addEventListener('click', () => cartModal.classList.add('hidden'));
     
-    // Apply coupon
     applyCoupon.addEventListener('click', applyCouponCode);
     
-    // Clear cart
     clearCartBtn.addEventListener('click', clearCart);
-    
-    // Checkout
+
     checkoutBtn.addEventListener('click', checkout);
-    
-    // Review navigation
+
     reviewPrev.addEventListener('click', prevReview);
     reviewNext.addEventListener('click', nextReview);
-    
-    // Review indicators
     if (reviewIndicators.length > 0) {
         reviewIndicators.forEach((indicator, index) => {
             indicator.addEventListener('click', () => showReview(index));
@@ -695,18 +634,10 @@ const setupEventListeners = () => {
     // Search and filter
     searchInput.addEventListener('input', filterProducts);
     categoryFilter.addEventListener('change', filterProducts);
-    sortBy.addEventListener('change', filterProducts);
-    
-    // Contact form
+    sortBy.addEventListener('change', filterProducts)
     contactForm.addEventListener('submit', submitContactForm);
-    
-    // User balance
     addMoneyBtn.addEventListener('click', addMoney);
-    
-    // Back to top
     backToTopBtn.addEventListener('click', scrollToTop);
-    
-    // Close cart modal when clicking outside
     window.addEventListener('click', function(event) {
         if (event.target === cartModal) {
             cartModal.classList.add('hidden');
